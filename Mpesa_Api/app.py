@@ -5,6 +5,7 @@ from flask_cors import CORS
 import time
 from flask_migrate import Migrate
 from models import db, QRCode
+import base64
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///daraja.db'
@@ -87,6 +88,45 @@ def mpesa_express():
         return jsonify(response.json())
     else:
         return jsonify({"error": "Failed to initiate STK Push", "details": response.json()}), response.status_code
+    
+
+# phone to phone stk push
+@app.route('/payments', methods=['POST'])
+def init_stk():
+    data = request.get_json()
+    amount = data["amount"]
+    customer_phone = data["phone"]  
+    business_shortcode = 174379 
+    business_phone = 254797594751
+
+    token, _ = get_access_token()
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/json"
+    }
+
+    # Constructing the payload
+    payload = {
+        "BusinessShortCode": business_shortcode,
+        "Password": "MTc0Mzc5YmZiMjc5ZjlhYTliZGJjZjE1OGU5N2RkNzFhNDY3Y2QyZTBjODkzMDU5YjEwZjc4ZTZiNzJhZGExZWQyYzkxOTIwMjQwNzA5MTc0MjU0",
+        "Timestamp": "20240709174254",
+        "TransactionType": "CustomerPayBillOnline",
+        "Amount": amount,
+        "PartyA": customer_phone, 
+        "PartyB": business_phone,  
+        "PhoneNumber": customer_phone,  
+        "CallBackURL": "https://mydomain.com/path",
+        "AccountReference": "Jomo Tech Limited",  
+        "TransactionDesc": "Payment for Winnie Jomo Services" 
+    }
+
+    response = requests.post('https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest', json=payload, headers=headers)
+    
+    if response.status_code == 200:
+        return jsonify(response.json())
+    else:
+        return jsonify({"error": "Failed to initiate STK Push", "details": response.json()}), response.status_code
+
 
 if __name__ == '__main__':
     app.run(debug=True)
