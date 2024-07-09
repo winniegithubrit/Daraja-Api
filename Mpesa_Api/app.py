@@ -65,6 +65,28 @@ def generate_qrcode():
         return jsonify(response.json())
     else:
         return jsonify({"error": "Failed to generate QR code", "details": response.json()}), response.status_code
+    
+# mpesa express functionality
+
+@app.route('/mpesa_express', methods=['POST'])
+def mpesa_express():
+    token, _ = get_access_token()
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/json"
+    }
+    payload = request.json
+    url = "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest"
+    response = requests.post(url, headers=headers, json=payload)
+    # print("Request Payload:", payload)
+    # print("Response Status Code:", response.status_code)
+    # print("Response Headers:", response.headers)
+    # print("Response Body:", response.text)
+    
+    if response.status_code == 200:
+        return jsonify(response.json())
+    else:
+        return jsonify({"error": "Failed to initiate STK Push", "details": response.json()}), response.status_code
 
 if __name__ == '__main__':
     app.run(debug=True)
