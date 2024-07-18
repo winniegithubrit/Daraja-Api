@@ -127,6 +127,20 @@ def init_stk():
     else:
         return jsonify({"error": "Failed to initiate STK Push", "details": response.json()}), response.status_code
 
-
+# Customer to business(C2B)
+@app.route('/mpesac2b', methods=['POST'])
+def mpesa_c2b():
+    token, _ = get_access_token()
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/json"
+    }
+    payload = request.json
+    url = "https://sandbox.safaricom.co.ke/mpesa/c2b/v1/registerurl"
+    response = requests.post(url, headers=headers,json=payload)
+    if response.status_code == 200:
+        return jsonify(response.json())
+    else:
+        return jsonify({"message":"Failed to do the stk push for mpesa C2B", "details": response.json()}), response.status_code
 if __name__ == '__main__':
     app.run(debug=True)
