@@ -65,3 +65,23 @@
     "ResponseCode": "0",
     "ResponseDescription": "Accept the service request successfully."
 }
+# TRANSACTION STATUS BODY AND RESPONSE
+{
+    "Initiator": "testapi",
+    "SecurityCredential": "ckUeqimPlWQ7Z7gzyBTMWaKktb1pJjalJSn0RuiL/3aY0OWZTlltTRbCb3ZoaB8WfaNIT8yAk5re7d7SJ+vz+BS4wDUqyYSSAclA0nx07Chjkul9dRrkOjoEP4uMkVSv48Wa0Wu03B3LJjeMY7d4NTRC7QF3VTEf5Z/lSA+tPZL+OglJXtcEiv2ZqnRcJKIG7gy4EmZt4Zqq73urtRSzGVECOXdS9pvqAbLAMVBY19hPsJMCbwfewHeQkCMSriJMAB0lV9UXFANM7iBQYYgzVaI5LdMCxplFsDRj7mBkm9S2SeM3p0g8PjWj4S1oNEd9aN5s7wfKlozHA25Crs4u3g==",
+    "CommandID": "TransactionStatusQuery",
+    "TransactionID": "OEI2AK4Q16",
+    "PartyA": 600995,
+    "IdentifierType": "1",
+    "ResultURL": "https://mydomain.com/TransactionStatus/result/",
+    "QueueTimeOutURL": "https://mydomain.com/TransactionStatus/queue/",
+    "Remarks": "ok",
+    "Occassion": "ok"
+  }
+  # RESPONSE 
+  {
+    "ConversationID": "AG_20240718_20105c44dec6cb3b05ab",
+    "OriginatorConversationID": "6e86-45dd-91ac-fd5d4178ab523768826",
+    "ResponseCode": "0",
+    "ResponseDescription": "Accept the service request successfully."
+}

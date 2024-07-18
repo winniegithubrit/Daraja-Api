@@ -159,5 +159,21 @@ def mpesa_b2c():
     else:
         return jsonify({"message": "Failed to accomplish the B2C Stk push", "details": response.json()}), response.status_code
     
+# transaction status
+@app.route('/mpesastkstatus', methods=['POST'])
+def transaction_status():
+    token,_ = get_access_token()
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Content-Type":"application/json"
+    }
+    payload = request.json
+    url ="https://sandbox.safaricom.co.ke/mpesa/transactionstatus/v1/query"
+    response = requests.post(url,headers=headers,json=payload)
+    if response.status_code == 200:
+        return jsonify(response.json())
+    else:
+        return jsonify({"message":"Failed to check the transaction status", "details": response.json()}), response.status_code
+    
 if __name__ == '__main__':
     app.run(debug=True)
