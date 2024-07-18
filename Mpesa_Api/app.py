@@ -5,7 +5,7 @@ from flask_cors import CORS
 import time
 from flask_migrate import Migrate
 from models import db, QRCode
-import base64
+import uuid
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///daraja.db'
@@ -142,5 +142,22 @@ def mpesa_c2b():
         return jsonify(response.json())
     else:
         return jsonify({"message":"Failed to do the stk push for mpesa C2B", "details": response.json()}), response.status_code
+    
+@app.route('/mpesab2c', methods=['POST'])
+def mpesa_b2c():
+    token, _ = get_access_token()
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/json"
+    }
+    payload = request.json
+    payload["OriginatorConversationID"] = str(uuid.uuid4())
+    url = "https://sandbox.safaricom.co.ke/mpesa/b2c/v1/paymentrequest"
+    response = requests.post(url, headers=headers, json=payload)
+    if response.status_code == 200:
+        return jsonify(response.json())
+    else:
+        return jsonify({"message": "Failed to accomplish the B2C Stk push", "details": response.json()}), response.status_code
+    
 if __name__ == '__main__':
     app.run(debug=True)
